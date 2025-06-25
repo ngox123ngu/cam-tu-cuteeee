@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cam Tu Cute - Fullscreen Cat</title>
+  <title>Cam Tu Cute - Touch Interaction</title>
   <style>
     html, body {
       margin: 0;
@@ -38,6 +38,45 @@
       mobile: { show: true },
       react: { opacityDefault: 1, opacityOnHover: 1 }
     });
+
+    // Chờ widget tải xong, thêm touch/click event
+    window.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('touchstart', handleTap);
+      document.addEventListener('click', handleTap);
+    });
+
+    function handleTap(event) {
+      // Hiển thị popup dễ thương
+      showMessage("Meow~ 😸", event.touches?.[0]?.clientX || event.clientX, event.touches?.[0]?.clientY || event.clientY);
+    }
+
+    function showMessage(text, x, y) {
+      const msg = document.createElement('div');
+      msg.innerText = text;
+      msg.style.position = 'absolute';
+      msg.style.left = `${x}px`;
+      msg.style.top = `${y}px`;
+      msg.style.background = '#ff69b4';
+      msg.style.color = '#fff';
+      msg.style.padding = '5px 10px';
+      msg.style.borderRadius = '10px';
+      msg.style.fontSize = '16px';
+      msg.style.fontFamily = 'sans-serif';
+      msg.style.transform = 'translate(-50%, -50%)';
+      msg.style.pointerEvents = 'none';
+      msg.style.opacity = '1';
+      msg.style.transition = 'all 1s ease-out';
+      document.body.appendChild(msg);
+
+      setTimeout(() => {
+        msg.style.top = `${y - 80}px`;
+        msg.style.opacity = '0';
+      }, 100);
+
+      setTimeout(() => {
+        document.body.removeChild(msg);
+      }, 1500);
+    }
   </script>
 </body>
 </html>

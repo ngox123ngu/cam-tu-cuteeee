@@ -36,103 +36,109 @@
 </head>
 <body>
 
-<!-- Live2D Cat with Tororo model -->
 <script>
   const version = Date.now();
 
-  const script = document.createElement('script');
-  script.src = `https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js?v=${version}`;
-  script.onload = () => {
-    L2Dwidget.init({
-      model: {
-        jsonPath: `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json?v=${version}`
-      },
-      display: {
-        position: "right",
-        width: window.innerWidth,
-        height: window.innerHeight,
-        hOffset: 0,
-        vOffset: 0
-      },
-      mobile: { show: true },
-      react: { opacityDefault: 1, opacityOnHover: 1 }
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      document.addEventListener(isTouchDevice ? 'touchstart' : 'click', handleTap);
-      setInterval(createBubble, 600);
-    });
-
-    function handleTap(event) {
-      const x = event.touches?.[0]?.clientX || event.clientX;
-      const y = event.touches?.[0]?.clientY || event.clientY;
-      showMessage(randomQuote(), x, y);
-    }
-
-    function showMessage(text, x, y) {
-      const msg = document.createElement('div');
-      msg.innerText = text;
-      Object.assign(msg.style, {
-        position: 'absolute',
-        left: `${x}px`,
-        top: `${y}px`,
-        background: '#ff69b4',
-        color: '#fff',
-        padding: '6px 12px',
-        borderRadius: '10px',
-        fontSize: '16px',
-        transform: 'translate(-50%, -50%)',
-        pointerEvents: 'none',
-        opacity: '1',
-        transition: 'all 2s ease-out',
-        zIndex: 9999,
+  document.addEventListener("DOMContentLoaded", () => {
+    // Tải thư viện Live2D
+    const script = document.createElement('script');
+    script.src = `https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js?v=${version}`;
+    script.onload = () => {
+      L2Dwidget.init({
+        model: {
+          jsonPath: `https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json?v=${version}`
+        },
+        display: {
+          position: "right",
+          width: window.innerWidth,
+          height: window.innerHeight,
+          hOffset: 0,
+          vOffset: 0
+        },
+        mobile: { show: true },
+        react: { opacityDefault: 1, opacityOnHover: 1 }
       });
-      document.body.appendChild(msg);
 
-      setTimeout(() => {
-        msg.style.top = `${y - 100}px`;
-        msg.style.opacity = '0';
-      }, 500);
+      // Sau khi load xong, mới gắn sự kiện chạm
+      setupInteraction();
+      setInterval(createBubble, 600);
+    };
+    document.body.appendChild(script);
+  });
 
-      setTimeout(() => {
-        msg.remove();
-      }, 3000);
-    }
+  function setupInteraction() {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const eventType = isTouchDevice ? 'touchstart' : 'click';
+    document.addEventListener(eventType, handleTap);
+  }
 
-    function randomQuote() {
-      const quotes = [
-        "Meow~ 😽",
-        "Lên SG lẹ coai 👀",
-        "Chạm nữa là cắn á! 😾",
-        "Ủa alo? Định nói gì đó hả?",
-        "Gãi đầu cái đi mà~",
-        "Quào, hôm nay xinh dữ ha 😻",
-        "Đừng chọc tui, tui hờn đó 🙀",
-        "Bấm hoài không mỏi tay à 😼",
-        "Tui hổng có rảnh nha =))",
-        "Bạn muốn nuôi tui hả? 😹",
-        "Cam Tú cute số dzách 💅",
-        "Ủa bạn ế hả sao rảnh quá dạ?",
-        "Cái tay này... không ổn nha 🐾",
-        "Chạm nhẹ thôi, dịu dàng chứ 😳",
-        "Bé mèo đang nghỉ ngơi mà huhu 😴",
-        "Tui mà là người chắc block bạn rồi đó 😑"
-      ];
-      return quotes[Math.floor(Math.random() * quotes.length)];
-    }
+  function handleTap(event) {
+    const x = event.touches?.[0]?.clientX || event.clientX;
+    const y = event.touches?.[0]?.clientY || event.clientY;
+    showMessage(randomQuote(), x, y);
+  }
 
-    function createBubble() {
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble';
-      bubble.style.left = `${Math.random() * window.innerWidth}px`;
-      bubble.style.top = `${window.innerHeight}px`;
-      bubble.style.width = bubble.style.height = `${Math.random() * 8 + 4}px`;
-      document.body.appendChild(bubble);
-      setTimeout(() => bubble.remove(), 3000);
-    }
-  };
-  document.body.appendChild(script);
+  function showMessage(text, x, y) {
+    const msg = document.createElement('div');
+    msg.innerText = text;
+    Object.assign(msg.style, {
+      position: 'absolute',
+      left: `${x}px`,
+      top: `${y}px`,
+      background: '#ff69b4',
+      color: '#fff',
+      padding: '6px 12px',
+      borderRadius: '10px',
+      fontSize: '16px',
+      transform: 'translate(-50%, -50%)',
+      pointerEvents: 'none',
+      opacity: '1',
+      transition: 'all 2s ease-out',
+      zIndex: 9999,
+    });
+    document.body.appendChild(msg);
+
+    setTimeout(() => {
+      msg.style.top = `${y - 100}px`;
+      msg.style.opacity = '0';
+    }, 500);
+
+    setTimeout(() => {
+      msg.remove();
+    }, 3000);
+  }
+
+  function randomQuote() {
+    const quotes = [
+      "Meow~ 😽",
+      "Lên SG lẹ coai 👀",
+      "Chạm nữa là cắn á! 😾",
+      "Ủa alo? Định nói gì đó hả?",
+      "Gãi đầu cái đi mà~",
+      "Quào, hôm nay xinh dữ ha 😻",
+      "Đừng chọc tui, tui hờn đó 🙀",
+      "Bấm hoài không mỏi tay à 😼",
+      "Tui hổng có rảnh nha =))",
+      "Bạn muốn nuôi tui hả? 😹",
+      "Cam Tú cute số dzách 💅",
+      "Ủa bạn ế hả sao rảnh quá dạ?",
+      "Cái tay này... không ổn nha 🐾",
+      "Chạm nhẹ thôi, dịu dàng chứ 😳",
+      "Bé mèo đang nghỉ ngơi mà huhu 😴",
+      "Tui mà là người chắc block bạn rồi đó 😑"
+    ];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  }
+
+  function createBubble() {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.style.left = `${Math.random() * window.innerWidth}px`;
+    bubble.style.top = `${window.innerHeight}px`;
+    bubble.style.width = bubble.style.height = `${Math.random() * 8 + 4}px`;
+    document.body.appendChild(bubble);
+    setTimeout(() => bubble.remove(), 3000);
+  }
 </script>
 
 </body>

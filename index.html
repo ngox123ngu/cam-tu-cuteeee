@@ -19,6 +19,7 @@
       width: 100% !important;
       height: 100% !important;
       object-fit: contain;
+      pointer-events: none; /* fix lỗi chạm bị block */
     }
     .bubble {
       position: absolute;
@@ -40,7 +41,6 @@
   const version = Date.now();
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Tải thư viện Live2D
     const script = document.createElement('script');
     script.src = `https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js?v=${version}`;
     script.onload = () => {
@@ -59,7 +59,6 @@
         react: { opacityDefault: 1, opacityOnHover: 1 }
       });
 
-      // Sau khi load xong, mới gắn sự kiện chạm
       setupInteraction();
       setInterval(createBubble, 600);
     };
@@ -69,12 +68,20 @@
   function setupInteraction() {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const eventType = isTouchDevice ? 'touchstart' : 'click';
-    document.addEventListener(eventType, handleTap);
+    const target = document.body; // fix touch trên mobile
+
+    target.addEventListener(eventType, handleTap);
   }
 
   function handleTap(event) {
-    const x = event.touches?.[0]?.clientX || event.clientX;
-    const y = event.touches?.[0]?.clientY || event.clientY;
+    let x = 0, y = 0;
+    if (event.touches && event.touches.length > 0) {
+      x = event.touches[0].clientX;
+      y = event.touches[0].clientY;
+    } else {
+      x = event.clientX;
+      y = event.clientY;
+    }
     showMessage(randomQuote(), x, y);
   }
 

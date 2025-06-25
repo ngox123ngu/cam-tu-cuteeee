@@ -75,11 +75,16 @@
     document.body.appendChild(script);
   });
 
-  function setupInteraction() {
-    const overlay = document.getElementById('touch-overlay');
+function setupInteraction() {
+  const overlay = document.getElementById('touch-overlay');
+  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  if (isTouch) {
     overlay.addEventListener('touchstart', handleTap);
+  } else {
     overlay.addEventListener('click', handleTap);
   }
+}
 
   function handleTap(event) {
     let x = 0, y = 0;

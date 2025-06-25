@@ -19,7 +19,14 @@
       width: 100% !important;
       height: 100% !important;
       object-fit: contain;
-      pointer-events: none; /* fix lỗi chạm bị block */
+      pointer-events: none; /* không ăn sự kiện chạm */
+    }
+    #touch-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
     }
     .bubble {
       position: absolute;
@@ -36,6 +43,9 @@
   </style>
 </head>
 <body>
+
+<!-- Overlay bắt chạm -->
+<div id="touch-overlay"></div>
 
 <script>
   const version = Date.now();
@@ -66,11 +76,9 @@
   });
 
   function setupInteraction() {
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const eventType = isTouchDevice ? 'touchstart' : 'click';
-    const target = document.body; // fix touch trên mobile
-
-    target.addEventListener(eventType, handleTap);
+    const overlay = document.getElementById('touch-overlay');
+    overlay.addEventListener('touchstart', handleTap);
+    overlay.addEventListener('click', handleTap);
   }
 
   function handleTap(event) {
